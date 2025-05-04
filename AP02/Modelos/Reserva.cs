@@ -25,27 +25,42 @@ public class Reserva
         }
     }
 
-    public bool Validar(ConfiguracaoReserva config)
+    private bool Validar(ConfiguracaoReserva configuracao)
     {
-        if (_data < config.DataMinima)
-            ErrosDeValidacao.Add($"A data {_data:dd/MM/yyyy} deve ser no mínimo {config.DataMinima:dd/MM/yyyy}");
-
-        if (_data > config.DataMaxima)
-            ErrosDeValidacao.Add($"A data {_data:dd/MM/yyyy} deve ser no máximo {config.DataMaxima:dd/MM/yyyy}");
-
-        if (_hora < config.HoraMinima)
-            ErrosDeValidacao.Add($"A hora {_hora} deve ser no mínimo {config.HoraMinima}");
-
-        if (_hora > config.HoraMaxima)
-            ErrosDeValidacao.Add($"A hora {_hora} deve ser no máximo {config.HoraMaxima}");
-
-        if (string.IsNullOrWhiteSpace(Descricao))
-            ErrosDeValidacao.Add("Descrição da sala não pode ser vazia.");
+        ErrosDeValidacao.Clear();
 
         if (Capacidade <= 0)
             ErrosDeValidacao.Add("Capacidade deve ser maior que zero.");
+        if (Capacidade >= 40)
+            ErrosDeValidacao.Add("Capacidade deve ser menor que 40 alunos.");
+
+        if (string.IsNullOrWhiteSpace(Descricao))
+            ErrosDeValidacao.Add("Descrição não pode ser vazia.");
+
+        if (!configuracao.ValidarConfiguracao(_data, _hora))
+            ErrosDeValidacao.AddRange(configuracao.ErrosDeValidacao);
 
         return ErrosDeValidacao.Count == 0;
+    }
+
+    public void RegistrarData(DateTime data)
+    {
+        _data = data;
+    }
+
+    public void RegistrarHora(TimeSpan hora)
+    {
+        _hora = hora;
+    }
+
+    public void RegistrarCapacidade(int capacidade)
+    {
+        Capacidade = capacidade;
+    }
+
+    public bool ValidarReserva(ConfiguracaoReserva configuracao)
+    {
+        return Validar(configuracao);
     }
 
     public override string ToString()
