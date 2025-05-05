@@ -90,7 +90,14 @@ while (reservaValida == null)
         var entrada = Console.ReadLine();
         if (DateTime.TryParseExact(entrada, "dd/MM/yyyy", culturaBrasileira, DateTimeStyles.None, out var data))
         {
-            dataReserva = data;
+            if (data >= configuracao.DataMinima && data <= configuracao.DataMaxima)
+            {
+                dataReserva = data;
+            }
+            else
+            {
+                Console.WriteLine($"Data fora do intervalo permitido ({configuracao.DataMinima:dd/MM/yyyy} a {configuracao.DataMaxima:dd/MM/yyyy}). Tente novamente.");
+            }
         }
         else
         {
@@ -105,7 +112,14 @@ while (reservaValida == null)
         var entrada = Console.ReadLine();
         if (TimeSpan.TryParseExact(entrada, "hh\\:mm", culturaBrasileira, out var hora))
         {
-            horaReserva = hora;
+            if (hora >= configuracao.HoraMinima && hora <= configuracao.HoraMaxima)
+            {
+                horaReserva = hora;
+            }
+            else
+            {
+                Console.WriteLine($"Hora fora do intervalo permitido ({configuracao.HoraMinima} a {configuracao.HoraMaxima}). Tente novamente.");
+            }
         }
         else
         {
